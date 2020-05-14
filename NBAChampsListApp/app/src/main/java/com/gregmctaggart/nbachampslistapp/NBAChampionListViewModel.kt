@@ -17,6 +17,14 @@ class NBAChampionListViewModel(
         }
     }
 
+    fun addItem(teamName: String, year:Int) {
+        val updatedList = mutableListOf<NBAChampion>()
+        updatedList.addAll(_champions.value!!)
+        updatedList.add(NBAChampion(0, year, teamName))
+
+        _champions.value = updatedList
+    }
+
     @Suppress("UNCHECKED_CAST")
     class Factory(private val repository: NBAChampionRepository) : ViewModelProvider.Factory {
         override fun <T : ViewModel?> create(modelClass: Class<T>): T {
@@ -24,26 +32,3 @@ class NBAChampionListViewModel(
         }
     }
 }
-
-/*
-private val dealRepository: DealRepository
-) : ViewModel() {
-
-    private val _deal = MutableLiveData<DealItem?>()
-    val deal: LiveData<DealItem?>
-        get() = _deal
-
-    fun loadDeal(id: String) {
-        viewModelScope.launch {
-            _deal.value = dealRepository.loadDeal(id)
-        }
-    }
-
-    @Suppress("UNCHECKED_CAST")
-    class Factory(private val repository: DealRepository) : ViewModelProvider.Factory {
-        override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-            return DealDetailsFragmentViewModel(repository) as T
-        }
-    }
-}
- */

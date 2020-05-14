@@ -9,17 +9,16 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import javax.inject.Inject
 
-/**
- * A simple [Fragment] subclass as the default destination in the navigation.
- */
 class NBAChampionListFragment : Fragment() {
 
     @Inject
     lateinit var repo: NBAChampionRepository
 
     private lateinit var recyclerView: RecyclerView
+    private lateinit var createButton: FloatingActionButton
     private lateinit var viewModel: NBAChampionListViewModel
 
     override fun onCreateView(
@@ -37,6 +36,7 @@ class NBAChampionListFragment : Fragment() {
         bind(view)
         observe()
         initializeList()
+        initializeButton()
         loadData()
     }
 
@@ -47,6 +47,7 @@ class NBAChampionListFragment : Fragment() {
 
     private fun bind(view: View) {
         recyclerView = view.findViewById(R.id.nba_champion_list)
+        createButton = requireActivity().findViewById(R.id.fab)
     }
 
     private fun observe() {
@@ -54,7 +55,8 @@ class NBAChampionListFragment : Fragment() {
             NBAChampionListViewModel::class.java
         )
         viewModel.champions.observe(requireActivity(), Observer {
-            // TODO: implement me!
+            val adapter = recyclerView.adapter as NBAChampionListAdapter
+            adapter.setItems(it)
         })
     }
 
@@ -63,7 +65,23 @@ class NBAChampionListFragment : Fragment() {
         recyclerView.adapter = NBAChampionListAdapter()
     }
 
+    private fun initializeButton() {
+        createButton.setOnClickListener { view ->
+            displayCreateBottomSheet()
+        }
+    }
+
     private fun loadData() {
         viewModel.fetchList()
+    }
+
+    private fun displayCreateBottomSheet() {
+        val bottomSheetFragment = CreateChampionTeamBottomSheetFragment(
+            object : CreateChampionTeamBottomSheetFragment.CreateItemCallback {
+                override fun onCreateChampion(teamName: String, year: String) {
+                    viewModel.addItem(teamName, year.toInt())
+                }
+            })
+        bottomSheetFragment.show(parentFragmentManager, bottomSheetFragment.tag)
     }
 }

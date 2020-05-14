@@ -14,10 +14,6 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
-
-        fab.setOnClickListener { view ->
-            // TODO: Add item to list
-        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

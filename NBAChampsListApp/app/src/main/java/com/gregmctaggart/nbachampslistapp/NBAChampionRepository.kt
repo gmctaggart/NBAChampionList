@@ -12,7 +12,7 @@ class NBAChampionRepository @Inject constructor(
 
         try {
             val response = api.getChampionList()
-            champions.addAll(response.items)
+            champions.addAll(response.items.distinct())
         } catch (e: Exception) {
             // TODO: Handle failures.
         }
