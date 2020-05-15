@@ -11,5 +11,5 @@
     <string name="create_team_name_hint">Team Name</string>
     <string name="create_team_year_hint">Year</string>
     <string name="create_team_save_button_text">Create</string>
-
+    <string name="network_error_message">An error has occurred</string>
 </resources>

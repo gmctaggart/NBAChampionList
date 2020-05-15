@@ -5,19 +5,21 @@ import javax.inject.Singleton
 
 @Singleton
 class NBAChampionRepository @Inject constructor(
-    private val api: ListAPI) {
+    private val api: ListAPI
+) {
 
-    suspend fun fetchChampionList(): List<NBAChampion> {
-        val champions = mutableListOf<NBAChampion>()
+    suspend fun fetchChampionList(): NetworkResource<List<NBAChampion>> {
+        val result = NetworkResource<List<NBAChampion>>()
 
         try {
             val response = api.getChampionList()
-            champions.addAll(response.items.distinct())
+            result.data = response.items.distinct()
+            result.success = true
         } catch (e: Exception) {
-            // TODO: Handle failures.
+            result.success = false
         }
 
-        return champions
+        return result
     }
 
 }

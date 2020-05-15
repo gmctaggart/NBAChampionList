@@ -4,11 +4,26 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.annotation.VisibleForTesting
 import androidx.recyclerview.widget.RecyclerView
 
 class NBAChampionListAdapter : RecyclerView.Adapter<NBAChampionListAdapter.ViewHolder>() {
 
+    interface DataChangedCallback {
+        fun onDataChanged()
+    }
+
     private val items = mutableListOf<NBAChampion>()
+
+    @VisibleForTesting
+    fun getItemData() = items
+
+    @VisibleForTesting
+    var dataChangedCallback = object : DataChangedCallback {
+        override fun onDataChanged() {
+            notifyDataSetChanged()
+        }
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.nba_champion_list_item, parent, false)
@@ -27,7 +42,7 @@ class NBAChampionListAdapter : RecyclerView.Adapter<NBAChampionListAdapter.ViewH
         this.items.clear()
         this.items.addAll(items)
 
-        notifyDataSetChanged()
+        dataChangedCallback.onDataChanged()
     }
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {

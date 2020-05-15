@@ -10,6 +10,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.android.material.snackbar.Snackbar
 import javax.inject.Inject
 
 class NBAChampionListFragment : Fragment() {
@@ -26,7 +27,7 @@ class NBAChampionListFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_first, container, false)
+        return inflater.inflate(R.layout.fragment_nba_champion_list, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -54,9 +55,21 @@ class NBAChampionListFragment : Fragment() {
         viewModel = ViewModelProvider(this, NBAChampionListViewModel.Factory(repo)).get(
             NBAChampionListViewModel::class.java
         )
+
         viewModel.champions.observe(requireActivity(), Observer {
             val adapter = recyclerView.adapter as NBAChampionListAdapter
             adapter.setItems(it)
+        })
+
+        viewModel.error.observe(requireActivity(), Observer { hasError ->
+            if (hasError) {
+                val snackbar = Snackbar.make(
+                    requireView(),
+                    getString(R.string.network_error_message),
+                    Snackbar.LENGTH_SHORT
+                )
+                snackbar.show()
+            }
         })
     }
 
